@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Nunito+Sans:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-body text-text-body bg-pure-white antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display text-text-dark font-bold tracking-tight;
+  }
+}
+
+@layer components {
+  /* Provide mapping for buttons from previous UI iterations to keep site stable */
+  .btn-primary {
+    @apply bg-brand-teal text-pure-white py-[12px] px-[28px] rounded-[6px] font-display font-bold text-[1rem] leading-none transition-all duration-300 ease-pharma border-none hover:bg-brand-dark hover:-translate-y-[2px] hover:shadow-btnGlow active:translate-y-0 active:scale-95;
+  }
+  .btn-ghost {
+    @apply bg-transparent text-brand-teal border-[1.5px] border-brand-teal rounded-[6px] py-[12px] px-[28px] font-display font-bold text-[1rem] leading-none transition-all duration-300 ease-pharma hover:-translate-y-[2px] hover:shadow-btnGlow active:translate-y-0 active:scale-95;
+  }
+
+  .card {
+    @apply bg-pure-white rounded-[16px] border border-border-default shadow-deep p-[32px] transition-all duration-300 ease-pharma hover:-translate-y-[5px] hover:shadow-cardHover;
+  }
+  .product-card {
+    @apply rounded-[16px] overflow-hidden bg-pure-white border border-border-default transition-all duration-300 ease-pharma relative hover:-translate-y-[5px] hover:shadow-cardHover;
+  }
+  .badge-base {
+    @apply rounded-full py-[4px] px-[12px] font-display font-bold text-[0.75rem] inline-flex items-center justify-center transition-colors shadow-sm;
+  }
+  .badge-teal { @apply badge-base bg-brand-light text-brand-teal; }
+  .label-ui { @apply font-display font-bold text-brand-teal uppercase tracking-[0.05em] text-[0.75rem]; }
+  .body-lg { @apply font-body font-normal text-[1.125rem] text-text-muted leading-[1.6]; }
+}
+
+/* SCROLL REVEAL (Shared classes) */
+@layer utilities {
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+}
+
+.reveal-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.reveal-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-item:nth-child(1) { transition-delay: 50ms; }
+.reveal-item:nth-child(2) { transition-delay: 150ms; }
+.reveal-item:nth-child(3) { transition-delay: 250ms; }
+.reveal-item:nth-child(4) { transition-delay: 350ms; }
+
+/* Custom Underline Animation for Navbar */
+.nav-link-underline {
+  @apply relative inline-flex items-center;
+}
+.nav-link-underline::after {
+  content: '';
+  @apply absolute bottom-[-4px] left-0 w-full h-[2px] bg-brand-teal scale-x-0 origin-center transition-transform duration-300 ease-pharma;
+}
+.nav-link-underline:hover::after,
+.nav-link-underline.active::after {
+  @apply scale-x-100;
+}
+
+/* Hamburger Clip-Path morphing - Basic implementation */
+.hamburger-line {
+  @apply w-6 h-[2px] bg-text-dark block transition-all duration-300 ease-pharma;
+}
+.hamburger.open .hamburger-line:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.hamburger.open .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open .hamburger-line:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-item, .marquee, .slideGradient { transition: none !important; animation: none !important; }
+}
