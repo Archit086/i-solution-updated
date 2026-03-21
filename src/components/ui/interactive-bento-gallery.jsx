@@ -323,7 +323,7 @@ const InteractiveBentoGallery = ({ mediaItems, title, description, onProductClic
                     />
                 ) : (
                     <motion.div
-                        className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4 auto-rows-[250px] md:auto-rows-[300px]"
+                        className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4 auto-rows-[120px] md:auto-rows-[160px]"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: "-100px" }}
