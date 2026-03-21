@@ -11,19 +11,19 @@ export default {
       },
       colors: {
         brand: {
-          teal: '#2BA8A0',    
-          dark: '#1D7A74',    
-          light: '#E8F7F6',   
+          teal: '#7C9B8D',    // Green
+          dark: '#1A201C',    // Black for deepest backgrounds
+          light: '#D3D7D5',   // Light Gray
         },
         accent: {
-          amber: '#F5A623',  
-          dark: '#D4881A',    
-          soft: '#FEF3DC',   
+          amber: '#767676',   // Gray for secondary buttons
+          dark: '#1A201C',    
+          soft: '#D3D7D5',   
         },
         pure: { white: '#FFFFFF' },
-        off: { white: '#F8F9FA' }, 
-        border: { default: '#EEF0F2' },
-        text: { dark: '#1A2530', body: '#4A5568', muted: '#718096' },
+        off: { white: '#F4F7F5' }, // Very slight off-white for the main background wrapper
+        border: { default: '#D3D7D5' }, // Light Gray for borders
+        text: { dark: '#1A201C', body: '#767676', muted: '#767676' }, // Black and Gray for texts
         success: { green: '#38A169' },
         warning: { amber: '#D97706' },
         danger: { red: '#E53E3E' },
@@ -172,7 +172,17 @@ export default {
         marquee: {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
-        }
+        },
+        spotlight: {
+          "0%": {
+            opacity: 0,
+            transform: "translate(-72%, -62%) scale(0.5)",
+          },
+          "100%": {
+            opacity: 1,
+            transform: "translate(-50%,-40%) scale(1)",
+          },
+        },
       },
       animation: {
         slideGradient: 'slideGradient 6s ease-in-out infinite',
@@ -200,6 +210,7 @@ export default {
         orbit2: 'orbit2 18s ease-in-out infinite',
         orbit3: 'orbit3 8s ease-in-out infinite',
         marquee: 'marquee 30s linear infinite',
+        spotlight: "spotlight 2s ease .75s 1 forwards",
       }
     },
   },

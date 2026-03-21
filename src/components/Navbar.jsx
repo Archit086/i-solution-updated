@@ -72,7 +72,7 @@ export default function Navbar() {
 
           {/* Desktop Links */}
           <nav className="hidden md:flex items-center gap-8">
-            {['Home', 'Products', 'Dashboard', 'Compliance', 'About'].map((route) => {
+            {['Home', 'Products', 'About', 'Contact'].map((route) => {
               const path = route === 'Home' ? '/' : `/${route.toLowerCase()}`;
               return (
                 <NavLink 
@@ -99,16 +99,10 @@ export default function Navbar() {
             <div className="h-6 w-px bg-border-default"></div>
             <div className="flex items-center gap-3">
               <button 
-                onClick={() => navigate('/login')}
-                className="bg-transparent border-[1.5px] border-brand-teal text-brand-teal font-display font-bold text-[0.875rem] py-2 px-5 rounded-md hover:-translate-y-[2px] hover:shadow-btnGlow transition-all duration-200 active:translate-y-0"
+                onClick={() => navigate('/contact')}
+                className="bg-brand-teal border-[1.5px] border-brand-teal text-pure-white font-display font-bold text-[0.875rem] py-2 px-6 rounded-md hover:bg-brand-dark hover:border-brand-dark hover:-translate-y-[2px] hover:shadow-btnGlow transition-all duration-200 active:translate-y-0"
               >
-                Login
-              </button>
-              <button 
-                onClick={() => navigate('/register')}
-                className="bg-brand-teal border-[1.5px] border-brand-teal text-pure-white font-display font-bold text-[0.875rem] py-2 px-5 rounded-md hover:bg-brand-dark hover:border-brand-dark hover:-translate-y-[2px] hover:shadow-btnGlow transition-all duration-200 active:translate-y-0"
-              >
-                Register
+                Contact Us
               </button>
             </div>
           </div>
@@ -149,7 +143,7 @@ export default function Navbar() {
           style={{ transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)' }}
         >
           <nav className="flex flex-col flex-1">
-            {['Home', 'Products', 'Dashboard', 'Compliance', 'About'].map((route, i) => {
+            {['Home', 'Products', 'About', 'Contact'].map((route, i) => {
               const path = route === 'Home' ? '/' : `/${route.toLowerCase()}`;
               return (
                 <NavLink 
@@ -177,11 +171,8 @@ export default function Navbar() {
               transition: 'all 0.3s ease-out'
             }}
           >
-            <button onClick={() => {navigate('/login'); setMobileMenuOpen(false);}} className="w-full bg-transparent border-[1.5px] border-brand-teal text-brand-teal font-display font-bold text-[1rem] py-3 px-5 rounded-md hover:bg-brand-light transition-colors">
-              Login
-            </button>
-            <button onClick={() => {navigate('/register'); setMobileMenuOpen(false);}} className="w-full bg-brand-teal text-pure-white font-display font-bold text-[1rem] py-3 px-5 rounded-md hover:bg-brand-dark transition-colors border-[1.5px] border-brand-teal">
-              Register
+            <button onClick={() => {navigate('/contact'); setMobileMenuOpen(false);}} className="w-full bg-brand-teal text-pure-white font-display font-bold text-[1rem] py-3 px-5 rounded-md hover:bg-brand-dark transition-colors border-[1.5px] border-brand-teal">
+              Contact Us
             </button>
           </div>
         </div>

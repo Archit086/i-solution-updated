@@ -1,29 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 
-const useLocalParallax = (speed = 0.08) => {
-  const [offset, setOffset] = useState(0);
-  
-  useEffect(() => {
-    let rafId;
-    const handleScroll = () => {
-      rafId = requestAnimationFrame(() => {
-        setOffset(window.scrollY * speed);
-      });
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [speed]);
-
-  return offset;
-};
-
 export default function AboutSection() {
   const sectionRef = useRef(null);
   const [inView, setInView] = useState(false);
-  const parallaxOffset = useLocalParallax(0.08);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -66,10 +45,10 @@ export default function AboutSection() {
         
         {/* LEFT COLUMN (Visual Mockup) */}
         <div 
-          className="relative w-full max-w-[500px] mx-auto lg:mx-0 transition-all duration-700 ease-out"
+          className="relative w-full max-w-[500px] mx-auto lg:mx-0 transition-all duration-1000 ease-out"
           style={{
             opacity: inView ? 1 : 0,
-            transform: inView ? `translateX(0) translateY(${-parallaxOffset}px)` : 'translateX(-40px)',
+            transform: inView ? `translate(0, 0)` : 'translate(-40px, 40px)',
           }}
         >
           {/* Floating Certified Badge */}
