@@ -172,6 +172,10 @@ export default {
           '33%': { transform: 'translate(10%, -10%)' },
           '66%': { transform: 'translate(-10%, -5%)' },
         },
+        aurora: {
+          from: { backgroundPosition: "50% 50%, 50% 50%" },
+          to: { backgroundPosition: "350% 50%, 350% 50%" },
+        },
         spotlight: {
           "0%": {
             opacity: 0,
@@ -209,6 +213,7 @@ export default {
         orbit2: 'orbit2 18s ease-in-out infinite',
         orbit3: 'orbit3 8s ease-in-out infinite',
         spotlight: "spotlight 2s ease .75s 1 forwards",
+        aurora: "aurora 60s linear infinite",
       }
     },
   },

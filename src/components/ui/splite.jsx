@@ -1,7 +1,7 @@
 import { Suspense, lazy } from 'react'
 const Spline = lazy(() => import('@splinetool/react-spline'))
 
-export function SplineScene({ scene, className }) {
+export function SplineScene({ scene, className, ...props }) {
   return (
     <Suspense 
       fallback={
@@ -13,6 +13,7 @@ export function SplineScene({ scene, className }) {
       <Spline
         scene={scene}
         className={className}
+        {...props}
       />
     </Suspense>
   )

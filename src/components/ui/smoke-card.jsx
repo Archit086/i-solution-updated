@@ -26,6 +26,18 @@ const SmokeCard = () => {
   const particlesRef = useRef([]);
   const mousePosRef = useRef({ x: 0, y: 0 });
   const animationFrameRef = useRef();
+  const isVisibleRef = useRef(true); // Track visibility to pause render loop
+
+  useEffect(() => {
+    // Pause canvas processing if user scrolls past the Hero section
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisibleRef.current = entry.isIntersecting;
+    }, { threshold: 0 });
+    
+    if (canvasRef.current) observer.observe(canvasRef.current);
+    
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -35,6 +47,12 @@ const SmokeCard = () => {
     if (!ctx) return;
 
     const animate = () => {
+      if (!isVisibleRef.current) {
+        // Skip computations but keep loop alive gracefully
+        animationFrameRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       // Update particles

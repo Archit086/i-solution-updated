@@ -1,24 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { SplineScene } from './ui/splite';
 import { SmokeCard } from './ui/smoke-card';
+import { AuroraBackground } from './ui/aurora-background';
+
+// Lazy load the heaviest asset (WebGL 3D Model) so it doesn't block the initial page render
+const SplineScene = lazy(() => import('./ui/splite').then(m => ({ default: m.SplineScene })));
 
 const SLIDES = [
   {
-    bg: 'linear-gradient(145deg, #F0F4F2 0%, #E8EFEA 100%)', 
     badge: 'LUXURY & COMPLIANCE',
     title: 'MANAGEMENT',
     subtitle: 'One holistic platform for products, orders, compliance, and every role in between.',
   },
   {
-    bg: 'linear-gradient(145deg, #EEF2F0 0%, #E2ECE5 100%)', 
     badge: 'EFFORTLESS AUTOMATION',
     title: 'COMPLIANCE',
     subtitle: 'From pending reviews to approved records — serene workflows automated perfectly.',
   },
   {
-    bg: 'linear-gradient(145deg, #F3F6F4 0%, #DFE8E3 100%)', 
     badge: 'UNIFIED ECOSYSTEM',
     title: 'SINGULARITY',
     subtitle: 'Admin, Authority, Distributor, Customer — transparency and clarity for all.',
@@ -28,37 +28,18 @@ const SLIDES = [
 export default function Hero() {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isSplineLoaded, setIsSplineLoaded] = useState(false);
 
-  // Parallax functionality based on scroll
   const { scrollY } = useScroll();
-  
-  // Background parallax: moves slower than the scroll (subtle shift down)
-  const backgroundY = useTransform(scrollY, [0, 1000], ['0%', '25%']);
-  
-  // Content parallax: moves faster than scroll to create depth and fades out
   const contentY = useTransform(scrollY, [0, 800], ['0%', '-40%']);
   const contentOpacity = useTransform(scrollY, [0, 600], [1, 0]);
 
-  // Auto-advance slides every 8 seconds (slower for premium feel)
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
     }, 8000);
     return () => clearInterval(timer);
   }, []);
-
-  const slideVariants = {
-    initial: { scale: 1.05, opacity: 0 },
-    animate: { 
-      scale: 1, 
-      opacity: 1, 
-      transition: { duration: 2.2, ease: [0.33, 1, 0.68, 1] } 
-    },
-    exit: { 
-      opacity: 0, 
-      transition: { duration: 1.5, ease: "easeInOut" } 
-    }
-  };
 
   const contentVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -75,47 +56,43 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative w-full h-screen min-h-[700px] overflow-hidden bg-off-white">
+    <AuroraBackground>
       
-      {/* BACKGROUND GRADIENT CAROUSEL WITH PARALLAX */}
-      <motion.div 
-        style={{ y: backgroundY }}
-        className="absolute inset-[-10%] w-[120%] h-[120%] pointer-events-none"
-      >
-        <AnimatePresence mode="popLayout" initial={false}>
-          <motion.div
-            key={currentSlide}
-            variants={slideVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            className="absolute inset-0 w-full h-full"
-            style={{ background: SLIDES[currentSlide].bg }}
-          />
+      {/* 3D SCENE CONTAINER (RESTORED & LAZY LOADED WITH CROSSFADE) */}
+      <div className="absolute top-0 right-[-30%] w-[130%] h-full md:right-[-10%] md:w-[70%] z-20 pointer-events-auto flex items-center justify-end grayscale brightness-[1.1] contrast-[0.95]">
+        
+        {/* Loading Spinner */}
+        <AnimatePresence>
+          {!isSplineLoaded && (
+            <motion.div 
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8 }}
+              className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none"
+            >
+              <div className="w-8 h-8 md:w-12 md:h-12 border-2 border-brand-teal border-t-transparent rounded-full animate-spin opacity-40"></div>
+            </motion.div>
+          )}
         </AnimatePresence>
-      </motion.div>
 
-      {/* RUSTIC NOISE OVERLAY */}
-      <div className="absolute inset-0 pointer-events-none z-10 opacity-[0.03]">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full opacity-100">
-          <filter id="noiseFilter">
-            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
-          </filter>
-          <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
-        </svg>
+        {/* 3D Scene */}
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: isSplineLoaded ? 0.9 : 0 }} 
+          transition={{ duration: 2, ease: "easeOut" }}
+          className="w-full h-full absolute inset-0"
+        >
+          <Suspense fallback={null}>
+            <SplineScene 
+              scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+              className="w-full h-full object-cover"
+              onLoad={() => setIsSplineLoaded(true)}
+            />
+          </Suspense>
+        </motion.div>
       </div>
-
-      {/* 3D SCENE CONTAINER (RESTORED) */}
-      <div className="absolute top-0 right-[-30%] w-[130%] h-full md:right-[-10%] md:w-[70%] z-20 pointer-events-auto flex items-center justify-end grayscale opacity-90 brightness-[1.1] contrast-[0.95]">
-        <SplineScene 
-          scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-          className="w-full h-full object-cover"
-        />
-      </div>
-
 
       {/* SMOKE EFFECT OVERLAY */}
-      <div className="absolute inset-0 z-15 pointer-events-none">
+      <div className="absolute inset-0 z-25 pointer-events-none">
          <SmokeCard />
       </div>
 
@@ -129,7 +106,7 @@ export default function Hero() {
            <AnimatePresence mode="wait">
              <motion.div 
                key={currentSlide}
-               className="col-span-1 lg:col-span-7 flex flex-col items-start text-left mt-20 md:mt-0"
+               className="col-span-1 lg:col-span-10 flex flex-col items-start text-left mt-20 md:mt-0"
              >
                {/* BADGE */}
                <motion.div
@@ -138,19 +115,19 @@ export default function Hero() {
                  initial="hidden"
                  animate="visible"
                  exit="exit"
-                 className="mb-8 font-sans text-[0.65rem] md:text-xs tracking-[0.3em] text-brand-teal font-semibold uppercase"
+                 className="mb-8 font-sans text-[0.65rem] md:text-xs tracking-[0.3em] text-brand-dark/80 font-semibold uppercase"
                >
                  {SLIDES[currentSlide].badge}
                </motion.div>
 
-               {/* MASSIVE SERIF HEADLINE (KALEO STYLE + I-SOLUTION) */}
+               {/* MASSIVE SERIF HEADLINE */}
                <motion.h1
                  custom={2}
                  variants={contentVariants}
                  initial="hidden"
                  animate="visible"
                  exit="exit"
-                 className="font-display font-extrabold text-[clamp(2.5rem,6vw,6rem)] leading-[0.9] text-text-dark tracking-tight"
+                 className="font-serif font-extrabold text-[clamp(2.5rem,6vw,6rem)] leading-[0.9] text-text-dark tracking-widest drop-shadow-sm"
                >
                  {SLIDES[currentSlide].title}
                </motion.h1>
@@ -162,7 +139,7 @@ export default function Hero() {
                  initial="hidden"
                  animate="visible"
                  exit="exit"
-                 className="mt-8 mb-12 font-sans font-medium text-base md:text-xl text-text-body max-w-xl leading-relaxed"
+                 className="mt-8 mb-12 font-sans font-medium text-base md:text-xl text-text-body max-w-xl leading-relaxed drop-shadow-sm"
                >
                  {SLIDES[currentSlide].subtitle}
                </motion.p>
@@ -185,7 +162,7 @@ export default function Hero() {
                  
                  <button 
                    onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-                   className="group flex items-center gap-3 px-6 py-4 rounded-full text-text-dark border-2 border-text-dark/10 font-sans font-bold text-sm tracking-widest uppercase transition-all hover:border-brand-teal pointer-events-auto"
+                   className="group flex items-center gap-3 px-6 py-4 rounded-full text-text-dark border-2 border-text-dark/10 font-sans font-bold text-sm tracking-widest uppercase transition-all hover:border-brand-teal pointer-events-auto backdrop-blur-sm"
                  >
                    <span>See Live Demo</span>
                  </button>
@@ -207,7 +184,7 @@ export default function Hero() {
               <button 
                 key={idx}
                 onClick={() => setCurrentSlide(idx)}
-                className={`transition-colors duration-500 hover:text-brand-teal ${currentSlide === idx ? 'text-brand-dark' : ''}`}
+                className={`transition-colors duration-500 hover:text-brand-dark ${currentSlide === idx ? 'text-brand-dark font-bold' : ''}`}
               >
                 {String(idx + 1).padStart(2, '0')}
               </button>
@@ -220,6 +197,6 @@ export default function Hero() {
           </div>
         </div>
       </motion.div>
-    </section>
+    </AuroraBackground>
   );
 }
