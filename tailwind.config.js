@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      maxWidth: {
+        container: "1280px",
+      },
       screens: {
         'xs': '375px',
       },
@@ -51,8 +54,8 @@ export default {
           '50%': { backgroundPosition: '100% 50%' },
         },
         marquee: {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-50%)' },
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(calc(-100% - var(--gap)))' }
         },
         pulseBreath: {
           '0%, 100%': { transform: 'scale(1)' },
@@ -169,10 +172,6 @@ export default {
           '33%': { transform: 'translate(10%, -10%)' },
           '66%': { transform: 'translate(-10%, -5%)' },
         },
-        marquee: {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-50%)' },
-        },
         spotlight: {
           "0%": {
             opacity: 0,
@@ -186,7 +185,7 @@ export default {
       },
       animation: {
         slideGradient: 'slideGradient 6s ease-in-out infinite',
-        marquee: 'marquee 30s linear infinite',
+        marquee: 'marquee var(--duration) linear infinite',
         pulseBreath: 'pulseBreath 2s cubic-bezier(0.4, 0, 0.2, 1) infinite',
         badgePulse: 'badgePulse 1.5s ease-in-out infinite',
         floatPill: 'floatPill 3.5s ease-in-out infinite',
@@ -209,7 +208,6 @@ export default {
         orbit1: 'orbit1 12s ease-in-out infinite',
         orbit2: 'orbit2 18s ease-in-out infinite',
         orbit3: 'orbit3 8s ease-in-out infinite',
-        marquee: 'marquee 30s linear infinite',
         spotlight: "spotlight 2s ease .75s 1 forwards",
       }
     },
